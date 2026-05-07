@@ -1,14 +1,16 @@
-# 🤖 AGENTE DE TAREAS CON CLAUDE
+# 🤖 AGENTE DE INCIDENCIAS CON CLAUDE
 
-Un agente inteligente que gestiona tus tareas usando la API de Claude.
+Un agente inteligente que gestiona incidencias de software (bugs) usando la API de Claude.
 
 ## ¿Qué hace?
 
 El agente puede:
-- ✅ **Crear tareas** con título, descripción y prioridad
-- 📋 **Listar tareas** con filtros (por prioridad, estado)
-- ✔️ **Marcar tareas** como completadas
-- 📊 **Ver estadísticas** de progreso
+
+🐛 Registrar incidencias con título, descripción y prioridad
+📋 Listar incidencias con filtros (prioridad, estado)
+✔️ Resolver incidencias
+📊 Ver estadísticas de progreso
+🌐 Usar una interfaz web visual con dashboard
 
 ## Instalación
 
@@ -89,7 +91,7 @@ El agente entiende preguntas naturales como:
 ## Estructura del código
 
 ```
-tarea_agente/
+agente_incidencias/
 ├── main.py           # Archivo principal (ejecutar esto)
 ├── agent.py          # Loop del agente
 ├── functions.py      # Funciones que ejecutan las herramientas
