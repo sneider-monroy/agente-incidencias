@@ -1,11 +1,118 @@
-import json
-FILE='incidencias.json'
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>🐛 Sistema de Incidencias</title>
 
-def load_data():
-    try:
-        return json.load(open(FILE))
-    except:
-        return []
+<style>
+body {
+    font-family: Arial;
+    background: linear-gradient(135deg,#667eea,#764ba2);
+    padding:20px;
+}
 
-def save_data(data):
-    json.dump(data, open(FILE,'w'), indent=4)
+.container {max-width:1200px;margin:auto;}
+
+header {
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    text-align:center;
+}
+
+.card {
+    background:white;
+    padding:15px;
+    border-radius:10px;
+    margin:10px 0;
+}
+
+button {
+    background:#667eea;
+    color:white;
+    padding:10px;
+    border:none;
+    cursor:pointer;
+}
+
+.issue {
+    background:#f5f5f5;
+    padding:15px;
+    border-left:5px solid #e74c3c;
+    margin-bottom:10px;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<header>
+<h1>🐛 Agente Inteligente de Incidencias</h1>
+<p>Gestión automática de bugs con IA</p>
+</header>
+
+<div class="card">
+<h2>📊 Estadísticas</h2>
+<p>Total: {{ stats.total }}</p>
+<p>Resueltas: {{ stats.resueltas }}</p>
+<p>Pendientes: {{ stats.pendientes }}</p>
+</div>
+
+<div class="card">
+<h2>➕ Nueva Incidencia</h2>
+<input id="title" placeholder="Título"><br><br>
+<input id="description" placeholder="Descripción"><br><br>
+
+<select id="priority">
+<option>Alta</option>
+<option>Media</option>
+<option>Baja</option>
+</select><br><br>
+
+<button onclick="crear()">Crear</button>
+</div>
+
+<div class="card">
+<h2>📋 Incidencias</h2>
+
+{% for t in tasks %}
+<div class="issue">
+<strong>{{t.title}}</strong><br>
+{{t.description}}<br>
+Prioridad: {{t.priority}}<br>
+
+{% if not t.completed %}
+<button onclick="resolver({{t.id}})">Resolver</button>
+{% else %}
+✔ Resuelta
+{% endif %}
+</div>
+{% endfor %}
+
+</div>
+
+</div>
+
+<script>
+async function crear(){
+    await fetch('/api/issues',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+            title:document.getElementById('title').value,
+            description:document.getElementById('description').value,
+            priority:document.getElementById('priority').value
+        })
+    })
+    location.reload()
+}
+
+async function resolver(id){
+    await fetch(`/api/tasks/${id}/complete`,{method:'PUT'})
+    location.reload()
+}
+</script>
+
+</body>
+</html>

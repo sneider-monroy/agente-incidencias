@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🐛 Sistema Inteligente de Incidencias</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+    font-family:'Segoe UI';
+    background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    min-height:100vh;
+    padding:20px;
+}
+
+.container{max-width:1400px;margin:auto}
+
+header{
+    background:white;
+    padding:25px;
+    border-radius:12px;
+    text-align:center;
+    margin-bottom:20px;
+}
+
+header h1{
+    font-size:2.5em;
+    color:#2c5364;
+}
+
+header p{color:#666}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:20px;
+    margin-bottom:20px;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    text-align:center;
+    transition:.3s;
+}
+
+.card:hover{transform:translateY(-5px)}
+
+.card .num{
+    font-size:2em;
+    font-weight:bold;
+    color:#2c5364;
+}
+
+.card.total{border-left:5px solid #3498db}
+.card.done{border-left:5px solid #2ecc71}
+.card.pending{border-left:5px solid #e74c3c}
+
+.section{
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    margin-bottom:20px;
+}
+
+input,select{
+    width:100%;
+    padding:10px;
+    margin:10px 0;
+    border-radius:5px;
+    border:1px solid #ccc;
+}
+
+button{
+    background:#2c5364;
+    color:white;
+    padding:10px;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+button:hover{background:#1b3a4b}
+
+.issue{
+    background:#f8f9fa;
+    padding:15px;
+    border-radius:10px;
+    margin-bottom:10px;
+    border-left:5px solid red;
+    transition:.3s;
+}
+
+.issue:hover{transform:translateX(5px)}
+
+.done{
+    border-left:5px solid green;
+    opacity:.7;
+}
+
+.badge{
+    padding:5px 10px;
+    border-radius:20px;
+    font-size:.8em;
+    font-weight:bold;
+}
+
+.high{background:red;color:white}
+.medium{background:orange;color:white}
+.low{background:green;color:white}
+
+.chart img{
+    width:100%;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+<h1>🐛 Sistema Inteligente de Incidencias</h1>
+<p>Gestión automática de errores con Inteligencia Artificial</p>
+</header>
+
+<!-- ESTADÍSTICAS -->
+<div class="stats">
+<div class="card total">
+<h3>Total</h3>
+<div class="num">{{ stats.total_tareas }}</div>
+</div>
+
+<div class="card done">
+<h3>Resueltas</h3>
+<div class="num">{{ stats.tareas_completadas }}</div>
+</div>
+
+<div class="card pending">
+<h3>Pendientes</h3>
+<div class="num">{{ stats.tareas_pendientes }}</div>
+</div>
+
+<div class="card">
+<h3>Progreso</h3>
+<div class="num">{{ stats.porcentaje_completado }}</div>
+</div>
+</div>
+
+<!-- GRÁFICAS -->
+<div class="section chart">
+<h2>📊 Análisis</h2>
+
+{% if charts.pie %}
+<img src="{{ charts.pie }}">
+{% endif %}
+
+{% if charts.priority %}
+<img src="{{ charts.priority }}">
+{% endif %}
+</div>
+
+<!-- FORMULARIO -->
+<div class="section">
+<h2>➕ Nueva Incidencia</h2>
+
+<input id="title" placeholder="Ej: Error en login">
+<input id="description" placeholder="Descripción del problema">
+
+<select id="priority">
+<option value="Alta">🔴 Alta</option>
+<option value="Media">🟡 Media</option>
+<option value="Baja">🟢 Baja</option>
+</select>
+
+<button onclick="crear()">Registrar Incidencia</button>
+</div>
+
+<!-- LISTA -->
+<div class="section">
+<h2>📋 Incidencias</h2>
+
+{% for t in tasks %}
+<div class="issue {% if t.completed %}done{% endif %}">
+
+<strong>{{t.title}}</strong><br>
+{{t.description}}<br><br>
+
+<span class="badge 
+{% if t.priority == 'Alta' %}high{% elif t.priority == 'Media' %}medium{% else %}low{% endif %}">
+{{t.priority}}
+</span>
+
+{% if not t.completed %}
+<button onclick="resolver({{t.id}})">Resolver</button>
+{% else %}
+✔ Resuelta
+{% endif %}
+
+</div>
+{% endfor %}
+
+</div>
+
+</div>
+
+<script>
+async function crear(){
+    await fetch('/api/tasks',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+            title:document.getElementById('title').value,
+            description:document.getElementById('description').value,
+            priority:document.getElementById('priority').value
+        })
+    })
+    location.reload()
+}
+
+async function resolver(id){
+    await fetch(`/api/tasks/${id}/complete`,{method:'PUT'})
+    location.reload()
+}
+</script>
+
+</body>
+</html>

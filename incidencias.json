@@ -1,1 +1,46 @@
-[]
+{
+  "issues": [
+    {
+      "id": 1,
+      "title": "🐛 Error en login",
+      "description": "El sistema no permite iniciar sesión",
+      "priority": "Alta",
+      "completed": true,
+      "created": "2026-04-28 11:42"
+    },
+    {
+      "id": 2,
+      "title": "🐛 Fallo en registro de usuarios",
+      "description": "No guarda correctamente los datos",
+      "priority": "Media",
+      "completed": true,
+      "created": "2026-04-28 16:37"
+    },
+    {
+      "id": 3,
+      "title": "🐛 Error en conexión al servidor",
+      "description": "Timeout al consultar API",
+      "priority": "Alta",
+      "completed": true,
+      "created": "2026-04-28 16:38"
+    },
+    {
+      "id": 4,
+      "title": "🐛 Problema en interfaz",
+      "description": "Botón no responde",
+      "priority": "Media",
+      "completed": true,
+      "created": "2026-04-28 17:57"
+    },
+    {
+      "id": 5,
+      "title": "🐛 Bug en dashboard",
+      "description": "Las gráficas no cargan",
+      "priority": "Alta",
+      "completed": false,
+      "created": "2026-04-28 18:51"
+    }
+  ],
+  "next_id": 6,
+  "last_save": "2026-04-28 18:51:28"
+}
